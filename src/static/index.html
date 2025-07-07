@@ -46,5 +46,35 @@
     </footer>
 
     <script src="app.js"></script>
+    <script>
+      // Ajout du rendu des participants dans chaque carte d'activité
+      function renderActivities(activities) {
+        const activitiesList = document.getElementById('activities-list');
+        activitiesList.innerHTML = '';
+        Object.entries(activities).forEach(([name, details]) => {
+          const card = document.createElement('div');
+          card.className = 'activity-card';
+          card.innerHTML = `
+            <h4>${name}</h4>
+           
+            <div class="activity-description"><strong>Description :</strong> ${details.description}</div>
+            <p><strong>Horaire :</strong> ${details.schedule}</p>
+            <p><strong>Places max :</strong> ${details.max_participants}</p>
+            <div class="participants-section">
+              <strong>Participants inscrits :</strong>
+              <ul class="participants-list">
+                ${details.participants.map(p => `<li>${p}</li>`).join('') || '<li>Aucun participant</li>'}
+              </ul>
+            </div>
+          `;
+          activitiesList.appendChild(card);
+        });
+      }
+
+      // Chargement initial des activités
+      fetch('/activities')
+        .then(res => res.json())
+        .then(data => renderActivities(data));
+    </script>
   </body>
 </html>
